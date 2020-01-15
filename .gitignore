@@ -1,0 +1,8 @@
+# Source : https://github.com/github/gitignore
+
+# Dependency directories
+node_modules/
+client/node_modules
+
+# Ignore node_modules
+node_modules/
