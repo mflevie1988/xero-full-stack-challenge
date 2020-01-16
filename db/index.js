@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 // DB config
 const uri = require('../config/keys').mongoURI;
+const testuri = require('../config/keys').mongoTestURI;
 
 function connect() {
 	return new Promise((resolve, reject) => {
