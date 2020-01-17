@@ -6,7 +6,9 @@ import './App.css';
 
 import { EditProduct } from './components/edit-product.component/edit-product.component';
 import { ProductList } from './components/product-list.component/product-list.component';
-
+import { ProductOptions } from './components/product-options.component/product-options.component';
+import { EditProductOption } from './components/edit-product-option.component/edit-product-option.component';
+import { AddProductOrOptions } from './components/add-product-or-options.component/add-product-or-option.component';
 function App() {
 	return (
 		<Router>
@@ -14,6 +16,26 @@ function App() {
 				<h1>Phone Shop</h1>
 				<Route path='/' exact component={ProductList} />
 				<Route path='/:id' exact component={EditProduct} />
+				<Route
+					path='/:id/:name/options'
+					exact
+					component={ProductOptions}
+				/>
+				<Route
+					path='/:id/:prodName/options/:optionID'
+					exact
+					component={EditProductOption}
+				/>
+				<Route
+					path='/add/:id/:name/options'
+					exact
+					component={AddProductOrOptions}
+				/>
+				<Route
+					path='/add/product'
+					exact
+					component={AddProductOrOptions}
+				/>
 			</div>
 		</Router>
 	);

@@ -158,7 +158,7 @@ router.post('/:id/options', (req, res) => {
 
 /**
  *@route PUT api/products/:id/options/:optionID
- *@desc Update a product and it's options
+ *@desc Update a specific option of a product
  *@access Public
  *
  */

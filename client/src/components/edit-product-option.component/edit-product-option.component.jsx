@@ -5,27 +5,25 @@ import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-export const EditProduct = (props) => {
+export const EditProductOption = (props) => {
 	const [_id, setID] = useState('');
-	const [name, setName] = useState('');
+	const [optionID, setOptionID] = useState('');
+	const [color, setColor] = useState('');
 	const [desc, setDesc] = useState('');
-	const [price, setPrice] = useState('');
-	const [deliveryPrice, setDeliveryPrice] = useState('');
 
 	useEffect(() => {
 		function fetchData() {
 			axios
 				.get(
-					`http://localhost:5000/api/products/${props.match.params.id}`
+					`http://localhost:5000/api/products/${props.match.params.id}/options/${props.match.params.optionID}`
 				)
 				.then((res) => {
 					const response = JSON.parse(JSON.stringify(res.data));
 					console.log(response);
-					setID(response._id);
-					setName(response.Name);
+					setID(response.ProductId);
+					setOptionID(response._id);
+					setColor(response.Name);
 					setDesc(response.Description);
-					setPrice(response.Price);
-					setDeliveryPrice(response.DeliveryPrice);
 				});
 		}
 		fetchData();
@@ -34,10 +32,8 @@ export const EditProduct = (props) => {
 	const updateProduct = (e) => {
 		e.preventDefault();
 		const product = {
-			Name: name,
-			Description: desc,
-			Price: price,
-			DeliveryPrice: deliveryPrice
+			Name: color,
+			Description: desc
 		};
 		const options = {
 			headers: {
@@ -48,14 +44,16 @@ export const EditProduct = (props) => {
 
 		axios
 			.put(
-				`http://localhost:5000/api/products/${_id}`,
+				`http://localhost:5000/api/products/${_id}/options/${optionID}`,
 				JSON.stringify(product),
 				options
 			)
 			.then((res) => {
 				const response = JSON.parse(JSON.stringify(res.data));
-				if (response.product) {
-					window.location = '/';
+				console.log(response);
+				if (response) {
+					window.location = `/${_id}/${props.match.params.prodName}/options`;
+					console.log(response);
 				} else {
 					alert('Error Updating the product');
 				}
@@ -65,64 +63,44 @@ export const EditProduct = (props) => {
 	return (
 		<div className='container'>
 			<div style={{ textAlign: 'right' }}>
-				<Link to={`/`}>
+				<Link to={`/${_id}/${props.match.params.prodName}/options`}>
 					<Button color='success'>Go Back</Button>
 				</Link>
 			</div>
 			<Form onSubmit={updateProduct}>
 				<FormGroup>
-					<Label for='exampleEmail'>Product ID</Label>
+					<Label for='exampleEmail'>Option ID</Label>
 					<Input
 						type='text'
 						name='prodID'
 						id='prodID'
-						value={_id || ''}
+						value={optionID || ''}
 						disabled
-						onChange={(e) => setID(e.target.value)}
+						onChange={(e) => setOptionID(e.target.value)}
 					/>
 				</FormGroup>
 				<FormGroup>
-					<Label for='exampleEmail'>Product Name</Label>
+					<Label for='exampleEmail'>Product Colour</Label>
 					<Input
 						type='text'
-						name='prodName'
-						id='prodName'
-						value={name || ''}
-						onChange={(e) => setName(e.target.value)}
+						name='prodColor'
+						id='prodColor'
+						value={color || ''}
+						onChange={(e) => setColor(e.target.value)}
 					/>
 				</FormGroup>
 				<FormGroup>
-					<Label for='exampleEmail'>Product Price</Label>
-					<Input
-						type='text'
-						name='prodPrice'
-						id='prodPrice'
-						value={price || ''}
-						onChange={(e) => setPrice(e.target.value)}
-					/>
-				</FormGroup>
-				<FormGroup>
-					<Label for='exampleEmail'>Product Delivery Price</Label>
-					<Input
-						type='text'
-						name='prodDelivery'
-						id='prodDelivery'
-						value={deliveryPrice || ''}
-						onChange={(e) => setDeliveryPrice(e.target.value)}
-					/>
-				</FormGroup>
-				<FormGroup>
-					<Label for='exampleText'>Product Description</Label>
+					<Label for='exampleEmail'>Product Option Description</Label>
 					<Input
 						type='textarea'
-						name='prodDesc'
-						id='prodDesc'
+						name='optionDesc'
+						id='optionDesc'
 						value={desc || ''}
 						onChange={(e) => setDesc(e.target.value)}
 					/>
 				</FormGroup>
 
-				<Button>Submit</Button>
+				<Button color='primary'>Submit</Button>
 			</Form>
 		</div>
 	);

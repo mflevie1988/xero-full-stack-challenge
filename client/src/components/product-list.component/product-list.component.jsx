@@ -1,42 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import {
-	Table,
-	Button,
-	Modal,
-	ModalHeader,
-	ModalBody,
-	ModalFooter
-} from 'reactstrap';
+import { Table, Button } from 'reactstrap';
 import axios from 'axios';
 
+import { DeleteConfirmation } from '../delete-confirmation.component/delete-confirmation.component';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export const ProductList = (props) => {
 	const [data, setData] = useState([]);
 	const [modal, setModal] = useState(false);
 	const [prodName, setProdName] = useState('');
+	const [deleteID, setDeleteID] = useState(false);
 
-	useEffect(() => {
-		function fetchData() {
-			axios.get('http://localhost:5000/api/products/').then((res) => {
+	// Get all the products from the database
+	function fetchData() {
+		axios
+			.get('http://localhost:5000/api/products/')
+			.then((res) => {
 				const response = JSON.parse(JSON.stringify(res.data));
 				console.log(response);
 				setData(response);
+			})
+			.catch((err) => {
+				alert('Error fetching data from database>');
 			});
-		}
+	}
+
+	useEffect(() => {
 		fetchData();
 	}, []);
+
+	// Delete a product
 	const deleteProduct = () => {
-		axios.delete();
+		axios
+			.delete(`http://localhost:5000/api/products/${deleteID}`)
+			.then((res) => {
+				const response = JSON.parse(JSON.stringify(res.data));
+				if (response.success) {
+					fetchData();
+					setModal(!modal);
+				}
+			});
 	};
-	// const show = (name) => {
-	// 	setModal(!modal);
-	// 	//setProdName(name);
-	// };
+	//Open or Close delete confirmation dialog
 	const toggle = () => setModal(!modal);
+
 	return (
 		<div className='App'>
+			<div style={{ textAlign: 'right' }}>
+				<Link to={`/add/product`}>
+					<Button color='success'>Add New Product</Button>
+				</Link>
+			</div>
 			<Table bordered>
 				<thead>
 					<tr>
@@ -68,11 +83,12 @@ export const ProductList = (props) => {
 									onClick={() => {
 										setModal(!modal);
 										setProdName(item.Name);
+										setDeleteID(item._id);
 									}}
 								>
 									Delete
 								</Button>{' '}
-								<Link to={`/${item._id}`}>
+								<Link to={`/${item._id}/${item.Name}/options`}>
 									<Button outline color='info'>
 										View Options
 									</Button>
@@ -82,20 +98,13 @@ export const ProductList = (props) => {
 					))}
 				</tbody>
 			</Table>
-			<Modal isOpen={modal}>
-				<ModalHeader toggle={toggle}>Modal title</ModalHeader>
-				<ModalBody>
-					<h4>Do you want to delete {`${prodName}`} product?</h4>
-				</ModalBody>
-				<ModalFooter>
-					<Button color='danger' onClick={toggle}>
-						Delete
-					</Button>{' '}
-					<Button color='primary' onClick={toggle}>
-						Cancel
-					</Button>
-				</ModalFooter>
-			</Modal>
+			<DeleteConfirmation
+				modal={modal}
+				toggle={toggle}
+				deleteProduct={deleteProduct}
+				prodName={prodName}
+				type={'product'}
+			/>
 		</div>
 	);
 };
