@@ -4,6 +4,7 @@ import { Table, Button } from 'reactstrap';
 import axios from 'axios';
 
 import { DeleteConfirmation } from '../delete-confirmation.component/delete-confirmation.component';
+import { SearchBox } from '../search-box.component/search-box.component';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export const ProductList = (props) => {
@@ -11,6 +12,7 @@ export const ProductList = (props) => {
 	const [modal, setModal] = useState(false);
 	const [prodName, setProdName] = useState('');
 	const [deleteID, setDeleteID] = useState(false);
+	const [searchField, setSearchField] = useState('');
 
 	// Get all the products from the database
 	function fetchData() {
@@ -18,7 +20,6 @@ export const ProductList = (props) => {
 			.get('http://localhost:5000/api/products/')
 			.then((res) => {
 				const response = JSON.parse(JSON.stringify(res.data));
-				console.log(response);
 				setData(response);
 			})
 			.catch((err) => {
@@ -45,8 +46,32 @@ export const ProductList = (props) => {
 	//Open or Close delete confirmation dialog
 	const toggle = () => setModal(!modal);
 
+	const searchClick = () => {
+		axios
+			.get(`http://localhost:5000/api/products?name=${searchField}`)
+			.then((res) => {
+				const response = JSON.parse(JSON.stringify(res.data));
+				console.log(response);
+				setData(response);
+			})
+			.catch((err) => {
+				alert('Error fetching data from database>');
+			});
+	};
+
+	// const filteredProducts = data.filter((product) =>
+	// 	product.Name.toLowerCase().includes(searchField.toLowerCase())
+	// );
+
 	return (
 		<div className='App'>
+			<div style={{ textAlign: 'right', paddingBottom: '20px' }}>
+				<SearchBox
+					placeholder='Search Products'
+					handleChange={(e) => setSearchField(e.target.value)}
+					searchClick={searchClick}
+				/>
+			</div>
 			<div style={{ textAlign: 'right' }}>
 				<Link to={`/add/product`}>
 					<Button color='success'>Add New Product</Button>

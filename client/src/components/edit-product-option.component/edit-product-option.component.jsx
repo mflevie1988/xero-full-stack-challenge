@@ -69,7 +69,7 @@ export const EditProductOption = (props) => {
 			</div>
 			<Form onSubmit={updateProduct}>
 				<FormGroup>
-					<Label for='exampleEmail'>Option ID</Label>
+					<Label>Option ID</Label>
 					<Input
 						type='text'
 						name='prodID'
@@ -80,7 +80,7 @@ export const EditProductOption = (props) => {
 					/>
 				</FormGroup>
 				<FormGroup>
-					<Label for='exampleEmail'>Product Colour</Label>
+					<Label>Product Colour</Label>
 					<Input
 						type='text'
 						name='prodColor'
@@ -90,7 +90,7 @@ export const EditProductOption = (props) => {
 					/>
 				</FormGroup>
 				<FormGroup>
-					<Label for='exampleEmail'>Product Option Description</Label>
+					<Label>Product Option Description</Label>
 					<Input
 						type='textarea'
 						name='optionDesc'

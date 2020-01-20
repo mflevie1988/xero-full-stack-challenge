@@ -1,19 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import {
-	Button,
-	Modal,
-	ModalHeader,
-	ModalBody,
-	ModalFooter,
-	Form,
-	FormGroup,
-	Label,
-	Input
-} from 'reactstrap';
+import React, { useState } from 'react';
+import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 export const AddProductOrOptions = (props) => {
-	const [_id, setID] = useState('');
 	const [color, setColor] = useState('');
 	const [name, setName] = useState('');
 	const [desc, setDesc] = useState('');
@@ -86,62 +76,81 @@ export const AddProductOrOptions = (props) => {
 
 	if (props.match.params.id) {
 		return (
-			<Form onSubmit={addProductOption}>
-				<FormGroup>
-					<Label for='exampleEmail'>Product Colour</Label>
-					<Input
-						type='text'
-						name='prodColor'
-						id='prodColor'
-						value={color || ''}
-						onChange={(e) => setColor(e.target.value)}
-					/>
-				</FormGroup>
-				<FormGroup>
-					<Label for='exampleEmail'>Product Option Description</Label>
-					<Input
-						type='textarea'
-						name='optionDesc'
-						id='optionDesc'
-						value={desc || ''}
-						onChange={(e) => setDesc(e.target.value)}
-					/>
-				</FormGroup>
+			<div className='conntainer'>
+				<div style={{ textAlign: 'right' }}>
+					<Link
+						to={`/${props.match.params.id}/${props.match.params.name}/options`}
+					>
+						<Button color='success'>Go Back</Button>
+					</Link>
+				</div>
+				<Form onSubmit={addProductOption}>
+					<FormGroup>
+						<Label>Product Colour</Label>
+						<Input
+							type='text'
+							name='prodColor'
+							id='prodColor'
+							value={color || ''}
+							required
+							onChange={(e) => setColor(e.target.value)}
+						/>
+					</FormGroup>
+					<FormGroup>
+						<Label>Product Option Description</Label>
+						<Input
+							type='textarea'
+							name='optionDesc'
+							id='optionDesc'
+							value={desc || ''}
+							required
+							onChange={(e) => setDesc(e.target.value)}
+						/>
+					</FormGroup>
 
-				<Button color='primary'>Submit</Button>
-			</Form>
+					<Button color='primary'>Submit</Button>
+				</Form>
+			</div>
 		);
 	} else {
 		return (
 			<div className='container'>
+				<div style={{ textAlign: 'right' }}>
+					<Link to={`/`}>
+						<Button color='success'>Go Back</Button>
+					</Link>
+				</div>
 				<Form onSubmit={addProduct}>
 					<FormGroup>
-						<Label for='exampleEmail'>Product Name</Label>
+						<Label>Product Name</Label>
 						<Input
 							type='text'
 							name='prodName'
 							id='prodName'
 							value={name || ''}
+							required
 							onChange={(e) => setName(e.target.value)}
 						/>
 					</FormGroup>
 					<FormGroup>
-						<Label for='exampleEmail'>Product Price</Label>
+						<Label>Product Price</Label>
 						<Input
 							type='text'
 							name='prodPrice'
 							id='prodPrice'
 							value={price || ''}
+							required
 							onChange={(e) => setPrice(e.target.value)}
 						/>
 					</FormGroup>
 					<FormGroup>
-						<Label for='exampleEmail'>Product Delivery Price</Label>
+						<Label>Product Delivery Price</Label>
 						<Input
 							type='text'
 							name='prodDelivery'
 							id='prodDelivery'
 							value={deliveryPrice || ''}
+							required
 							onChange={(e) => setDeliveryPrice(e.target.value)}
 						/>
 					</FormGroup>
@@ -152,6 +161,7 @@ export const AddProductOrOptions = (props) => {
 							name='prodDesc'
 							id='prodDesc'
 							value={desc || ''}
+							required
 							onChange={(e) => setDesc(e.target.value)}
 						/>
 					</FormGroup>

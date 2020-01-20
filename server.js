@@ -21,17 +21,7 @@ db.connect().then(() => {
 	app.listen(port, () => console.log(`Server is running on port: ${port}`));
 });
 
-// app.post('/notes', (req, res) => {
-// 	return {
-// 		_id: '5e1e8aefa90ab91c88975d35',
-// 		Name: 'Oppo',
-// 		Description: 'Newest mobile product from Oppo.',
-// 		Price: 899.99,
-// 		DeliveryPrice: 8.99
-// 	};
-// });
-
-//use routes
+//Mount all routes for api/products
 app.use('/api/products', products);
 
 module.exports = app;

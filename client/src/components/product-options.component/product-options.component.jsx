@@ -102,7 +102,7 @@ export const ProductOptions = (props) => {
 						))
 					) : (
 						<tr>
-							<td colspan='4' style={{ textAlign: 'center' }}>
+							<td colSpan='4' style={{ textAlign: 'center' }}>
 								<h6>{'No Options to Display'}</h6>
 							</td>
 						</tr>

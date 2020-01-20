@@ -71,7 +71,7 @@ export const EditProduct = (props) => {
 			</div>
 			<Form onSubmit={updateProduct}>
 				<FormGroup>
-					<Label for='exampleEmail'>Product ID</Label>
+					<Label>Product ID</Label>
 					<Input
 						type='text'
 						name='prodID'
@@ -82,7 +82,7 @@ export const EditProduct = (props) => {
 					/>
 				</FormGroup>
 				<FormGroup>
-					<Label for='exampleEmail'>Product Name</Label>
+					<Label>Product Name</Label>
 					<Input
 						type='text'
 						name='prodName'
@@ -92,7 +92,7 @@ export const EditProduct = (props) => {
 					/>
 				</FormGroup>
 				<FormGroup>
-					<Label for='exampleEmail'>Product Price</Label>
+					<Label>Product Price</Label>
 					<Input
 						type='text'
 						name='prodPrice'
@@ -102,7 +102,7 @@ export const EditProduct = (props) => {
 					/>
 				</FormGroup>
 				<FormGroup>
-					<Label for='exampleEmail'>Product Delivery Price</Label>
+					<Label>Product Delivery Price</Label>
 					<Input
 						type='text'
 						name='prodDelivery'
