@@ -15,7 +15,7 @@ export const ProductList = (props) => {
 	const [searchField, setSearchField] = useState('');
 
 	// Get all the products from the database
-	function fetchData() {
+	const fetchData = () => {
 		axios
 			.get('http://localhost:5000/api/products/')
 			.then((res) => {
@@ -25,7 +25,7 @@ export const ProductList = (props) => {
 			.catch((err) => {
 				alert('Error fetching data from database>');
 			});
-	}
+	};
 
 	useEffect(() => {
 		fetchData();
@@ -59,9 +59,9 @@ export const ProductList = (props) => {
 			});
 	};
 
-	// const filteredProducts = data.filter((product) =>
-	// 	product.Name.toLowerCase().includes(searchField.toLowerCase())
-	// );
+	const filteredProducts = data.filter((product) =>
+		product.Name.toLowerCase().includes(searchField.toLowerCase())
+	);
 
 	return (
 		<div className='App'>
@@ -89,7 +89,7 @@ export const ProductList = (props) => {
 					</tr>
 				</thead>
 				<tbody>
-					{data.map((item, index) => (
+					{filteredProducts.map((item, index) => (
 						<tr key={item._id}>
 							<th scope='row'>{index + 1}</th>
 							<td>{item.Name}</td>

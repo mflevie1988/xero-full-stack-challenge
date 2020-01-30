@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
@@ -12,24 +12,23 @@ export const EditProduct = (props) => {
 	const [price, setPrice] = useState('');
 	const [deliveryPrice, setDeliveryPrice] = useState('');
 
+	const fetchData = useCallback(() => {
+		axios
+			.get(`http://localhost:5000/api/products/${props.match.params.id}`)
+			.then((res) => {
+				const response = JSON.parse(JSON.stringify(res.data));
+				console.log(response);
+				setID(response._id);
+				setName(response.Name);
+				setDesc(response.Description);
+				setPrice(response.Price);
+				setDeliveryPrice(response.DeliveryPrice);
+			});
+	}, [props.match.params.id]);
+
 	useEffect(() => {
-		function fetchData() {
-			axios
-				.get(
-					`http://localhost:5000/api/products/${props.match.params.id}`
-				)
-				.then((res) => {
-					const response = JSON.parse(JSON.stringify(res.data));
-					console.log(response);
-					setID(response._id);
-					setName(response.Name);
-					setDesc(response.Description);
-					setPrice(response.Price);
-					setDeliveryPrice(response.DeliveryPrice);
-				});
-		}
 		fetchData();
-	}, []);
+	}, [fetchData]);
 
 	const updateProduct = (e) => {
 		e.preventDefault();

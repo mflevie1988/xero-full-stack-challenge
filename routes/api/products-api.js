@@ -93,7 +93,7 @@ router.post('/:id/options', ProducController.createAnProductOption);
  *
  */
 router.put(
-	'/:id/options/:optionID',
+	'/:ProductId/options/:optionID',
 	ProducController.updateSelectedProductOption
 );
 

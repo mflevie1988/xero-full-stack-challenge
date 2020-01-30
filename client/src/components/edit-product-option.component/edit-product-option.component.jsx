@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
@@ -11,23 +11,24 @@ export const EditProductOption = (props) => {
 	const [color, setColor] = useState('');
 	const [desc, setDesc] = useState('');
 
+	const fetchData = useCallback(() => {
+		axios
+			.get(
+				`http://localhost:5000/api/products/${props.match.params.id}/options/${props.match.params.optionID}`
+			)
+			.then((res) => {
+				const response = JSON.parse(JSON.stringify(res.data));
+				console.log(response);
+				setID(response.ProductId);
+				setOptionID(response._id);
+				setColor(response.Name);
+				setDesc(response.Description);
+			});
+	}, [props.match.params.id, props.match.params.optionID]);
+
 	useEffect(() => {
-		function fetchData() {
-			axios
-				.get(
-					`http://localhost:5000/api/products/${props.match.params.id}/options/${props.match.params.optionID}`
-				)
-				.then((res) => {
-					const response = JSON.parse(JSON.stringify(res.data));
-					console.log(response);
-					setID(response.ProductId);
-					setOptionID(response._id);
-					setColor(response.Name);
-					setDesc(response.Description);
-				});
-		}
 		fetchData();
-	}, []);
+	}, [fetchData]);
 
 	const updateProduct = (e) => {
 		e.preventDefault();
@@ -41,6 +42,8 @@ export const EditProductOption = (props) => {
 				'Access-Control-Allow-Origin': '*'
 			}
 		};
+
+		console.log(JSON.stringify(product));
 
 		axios
 			.put(

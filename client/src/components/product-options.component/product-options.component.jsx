@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Table, Button } from 'reactstrap';
@@ -12,7 +12,7 @@ export const ProductOptions = (props) => {
 	const [prodId, setProdId] = useState('');
 
 	// Get all the products from the database
-	function fetchData() {
+	const fetchData = useCallback(() => {
 		axios
 			.get(
 				`http://localhost:5000/api/products/${props.match.params.id}/options`
@@ -27,11 +27,11 @@ export const ProductOptions = (props) => {
 			.catch((err) => {
 				alert('Error fetching data from database>');
 			});
-	}
+	}, [props.match.params.id, props.match.params.name]);
 
 	useEffect(() => {
 		fetchData();
-	}, []);
+	}, [fetchData]);
 
 	// Delete a product
 	const deleteProduct = () => {

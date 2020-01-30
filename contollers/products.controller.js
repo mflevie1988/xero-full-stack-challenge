@@ -222,7 +222,7 @@ function updateSelectedProductOption(req, res) {
 		res.status(400).json(error);
 	} else {
 		const newProductOption = new ProductOption({
-			ProductId: req.params.id,
+			ProductId: req.params.ProductId,
 			Name: req.body.Name,
 			Description: req.body.Description
 		});
