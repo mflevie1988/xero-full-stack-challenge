@@ -83,7 +83,7 @@ router.get(
  *@access Public
  *
  */
-router.post('/:id/options', ProducController.createAnProductOption);
+router.post('/:ProductId/options', ProducController.createAnProductOption);
 
 /**
  *@route PUT api/products/:id/options/:optionID

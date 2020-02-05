@@ -91,17 +91,25 @@ function findSelectedOptionOfAProductValidation(req) {
 }
 
 function createAnProductOptionValidation(req) {
-	const schema = Joi.object().keys({
+	const schemaParams = Joi.object().keys({
 		ProductId: Joi.string()
 			.trim()
-			.required(),
+			.required()
+	});
+	const schemaBody = Joi.object().keys({
 		Name: Joi.string()
 			.trim()
 			.required(),
 		Description: Joi.string().trim()
 	});
-	const { value, error } = Joi.validate(req.body, schema);
-	if (error) {
+	const { error } = Joi.validate(req.params, schemaParams);
+	if (!error) {
+		const { error } = Joi.validate(req.body, schemaBody);
+		if (error) {
+			console.log(error);
+			return error;
+		}
+	} else {
 		return error;
 	}
 }

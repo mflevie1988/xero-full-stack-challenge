@@ -1,0 +1,5 @@
+export const DELETE_PHONE = 'DELETE_PHONE';
+export const SEARCH_PHONE_TEXT = 'SEARCH_PHONE_TEXT';
+export const FETCH_DATA = 'FETCH_DATA';
+export const CLOSE_MODAL = 'CLOSE_MODAL';
+export const SEARCHED_PHONE = 'SEARCHED_PHONE';

@@ -1,78 +1,101 @@
 import React, { useState } from 'react';
-import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import {
+	Button,
+	Form,
+	FormGroup,
+	FormFeedback,
+	Label,
+	Input
+} from 'reactstrap';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+//import UseFormValidation from '../../utils/use-form-validation';
+import UseFormValidation from '../../utils/use-form-validation';
+import validateAddForm from '../../utils/validateAddForm';
+
+const initialState = {
+	color: '',
+	name: '',
+	desc: '',
+	price: '',
+	deliveryPrice: ''
+};
 
 export const AddProductOrOptions = (props) => {
-	const [color, setColor] = useState('');
-	const [name, setName] = useState('');
-	const [desc, setDesc] = useState('');
-	const [price, setPrice] = useState('');
-	const [deliveryPrice, setDeliveryPrice] = useState('');
+	const {
+		handleChange,
+		values,
+		addProduct,
+		addProductOption,
+		isProductSubmitting,
+		isProductOptionSubmitting,
+		errors
+	} = UseFormValidation(initialState, props, validateAddForm);
 
-	//Adding the product option
-	const addProductOption = (e) => {
-		e.preventDefault();
-		const product = {
-			Name: color,
-			Description: desc
-		};
-		const options = {
-			headers: {
-				'Content-Type': 'application/json;charset=UTF-8',
-				'Access-Control-Allow-Origin': '*'
-			}
-		};
+	console.log(errors);
 
-		axios
-			.post(
-				`http://localhost:5000/api/products/${props.match.params.id}/options`,
-				JSON.stringify(product),
-				options
-			)
-			.then((res) => {
-				const response = JSON.parse(JSON.stringify(res.data));
-				console.log(response);
-				if (response) {
-					window.location = `/${props.match.params.id}/${props.match.params.name}/options`;
-					console.log(response);
-				} else {
-					alert('Error Updating the product');
-				}
-			});
-	};
+	// //Adding the product option
+	// const addProductOption = (e) => {
+	// 	e.preventDefault();
+	// 	const product = {
+	// 		Name: values.color,
+	// 		Description: values.desc
+	// 	};
+	// 	const options = {
+	// 		headers: {
+	// 			'Content-Type': 'application/json;charset=UTF-8',
+	// 			'Access-Control-Allow-Origin': '*'
+	// 		}
+	// 	};
 
-	//Adding a product
-	const addProduct = (e) => {
-		e.preventDefault();
-		const product = {
-			Name: name,
-			Description: desc,
-			Price: price,
-			DeliveryPrice: deliveryPrice
-		};
-		const options = {
-			headers: {
-				'Content-Type': 'application/json;charset=UTF-8',
-				'Access-Control-Allow-Origin': '*'
-			}
-		};
+	// 	axios
+	// 		.post(
+	// 			`http://localhost:5000/api/products/${props.match.params.id}/options`,
+	// 			JSON.stringify(product),
+	// 			options
+	// 		)
+	// 		.then((res) => {
+	// 			const response = JSON.parse(JSON.stringify(res.data));
+	// 			console.log(response);
+	// 			if (response) {
+	// 				window.location = `/${props.match.params.id}/${props.match.params.name}/options`;
+	// 				console.log(response);
+	// 			} else {
+	// 				alert('Error Updating the product');
+	// 			}
+	// 		});
+	// };
 
-		axios
-			.post(
-				`http://localhost:5000/api/products/`,
-				JSON.stringify(product),
-				options
-			)
-			.then((res) => {
-				const response = JSON.parse(JSON.stringify(res.data));
-				if (response) {
-					window.location = '/';
-				} else {
-					alert('Error Updating the product');
-				}
-			});
-	};
+	// //Adding a product
+	// const addProduct = (e) => {
+	// 	e.preventDefault();
+	// 	const product = {
+	// 		Name: values.name,
+	// 		Description: values.desc,
+	// 		Price: values.price,
+	// 		DeliveryPrice: values.deliveryPrice
+	// 	};
+	// 	const options = {
+	// 		headers: {
+	// 			'Content-Type': 'application/json;charset=UTF-8',
+	// 			'Access-Control-Allow-Origin': '*'
+	// 		}
+	// 	};
+
+	// 	axios
+	// 		.post(
+	// 			`http://localhost:5000/api/products/`,
+	// 			JSON.stringify(product),
+	// 			options
+	// 		)
+	// 		.then((res) => {
+	// 			const response = JSON.parse(JSON.stringify(res.data));
+	// 			if (response) {
+	// 				window.location = '/';
+	// 			} else {
+	// 				alert('Error Updating the product');
+	// 			}
+	// 		});
+	// };
 
 	if (props.match.params.id) {
 		return (
@@ -89,26 +112,39 @@ export const AddProductOrOptions = (props) => {
 						<Label>Product Colour</Label>
 						<Input
 							type='text'
-							name='prodColor'
-							id='prodColor'
-							value={color || ''}
-							required
-							onChange={(e) => setColor(e.target.value)}
+							name='color'
+							id='color'
+							value={values.color || ''}
+							onChange={handleChange}
 						/>
+						{errors.color && (
+							<span style={{ color: 'red' }}>
+								<i>{errors.color}</i>
+							</span>
+						)}
 					</FormGroup>
 					<FormGroup>
 						<Label>Product Option Description</Label>
 						<Input
 							type='textarea'
-							name='optionDesc'
-							id='optionDesc'
-							value={desc || ''}
-							required
-							onChange={(e) => setDesc(e.target.value)}
+							name='desc'
+							id='desc'
+							value={values.desc || ''}
+							onChange={handleChange}
 						/>
+						{errors.desc && (
+							<span style={{ color: 'red' }}>
+								<i>{errors.desc}</i>
+							</span>
+						)}
 					</FormGroup>
 
-					<Button color='primary'>Submit</Button>
+					<Button
+						disabled={isProductOptionSubmitting}
+						color='primary'
+					>
+						Submit
+					</Button>
 				</Form>
 			</div>
 		);
@@ -125,48 +161,50 @@ export const AddProductOrOptions = (props) => {
 						<Label>Product Name</Label>
 						<Input
 							type='text'
-							name='prodName'
-							id='prodName'
-							value={name || ''}
+							name='name'
+							id='name'
+							value={values.name || ''}
 							required
-							onChange={(e) => setName(e.target.value)}
+							onChange={handleChange}
 						/>
 					</FormGroup>
 					<FormGroup>
 						<Label>Product Price</Label>
 						<Input
 							type='text'
-							name='prodPrice'
-							id='prodPrice'
-							value={price || ''}
+							name='price'
+							id='price'
+							value={values.price || ''}
 							required
-							onChange={(e) => setPrice(e.target.value)}
+							onChange={handleChange}
 						/>
 					</FormGroup>
 					<FormGroup>
 						<Label>Product Delivery Price</Label>
 						<Input
 							type='text'
-							name='prodDelivery'
-							id='prodDelivery'
-							value={deliveryPrice || ''}
+							name='deliveryPrice'
+							id='deliveryPrice'
+							value={values.deliveryPrice || ''}
 							required
-							onChange={(e) => setDeliveryPrice(e.target.value)}
+							onChange={handleChange}
 						/>
 					</FormGroup>
 					<FormGroup>
 						<Label for='exampleText'>Product Description</Label>
 						<Input
 							type='textarea'
-							name='prodDesc'
-							id='prodDesc'
-							value={desc || ''}
+							name='desc'
+							id='desc'
+							value={values.desc || ''}
 							required
-							onChange={(e) => setDesc(e.target.value)}
+							onChange={handleChange}
 						/>
 					</FormGroup>
 
-					<Button color='primary'>Submit</Button>
+					<Button disabled={isProductSubmitting} color='primary'>
+						Submit
+					</Button>
 				</Form>
 			</div>
 		);

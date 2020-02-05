@@ -193,7 +193,7 @@ function createAnProductOption(req, res) {
 		res.status(400).json(error);
 	} else {
 		const newProductOption = new ProductOption({
-			ProductId: req.params.id,
+			ProductId: req.params.ProductId,
 			Name: req.body.Name,
 			Description: req.body.Description
 		});
@@ -248,7 +248,7 @@ function updateSelectedProductOption(req, res) {
  *
  */
 function deleteSelectedProductOption(req, res) {
-	const error = deleteSelectedProductOptionValidation(req);
+	const error = Validation.deleteSelectedProductOptionValidation(req);
 
 	if (error) {
 		res.status(404).json(error);

@@ -1,75 +1,87 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Table, Button } from 'reactstrap';
 import axios from 'axios';
 
 import { DeleteConfirmation } from '../delete-confirmation.component/delete-confirmation.component';
 import { SearchBox } from '../search-box.component/search-box.component';
+import {
+	fetchProductData,
+	deletePhoneRecordCall,
+	closeModal,
+	setSearchField,
+	getSearchedPhone
+} from '../../redux/actions/product-list.actions';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export const ProductList = (props) => {
-	const [data, setData] = useState([]);
-	const [modal, setModal] = useState(false);
-	const [prodName, setProdName] = useState('');
-	const [deleteID, setDeleteID] = useState(false);
-	const [searchField, setSearchField] = useState('');
+	const { data, prodName, deleteID, modal, searchField } = useSelector(
+		(state) => state
+	); //this hook gives us redux store state
+	const dispatch = useDispatch(); //this hook gives us dispatch method
 
 	// Get all the products from the database
-	const fetchData = () => {
+	const fetchData = (dat) => (dispatch) => {
 		axios
 			.get('http://localhost:5000/api/products/')
 			.then((res) => {
 				const response = JSON.parse(JSON.stringify(res.data));
-				setData(response);
+				dispatch(fetchProductData(response));
 			})
 			.catch((err) => {
-				alert('Error fetching data from database>');
+				alert('Error fetching data from database');
 			});
 	};
 
 	useEffect(() => {
-		fetchData();
-	}, []);
+		dispatch(fetchData());
+	}, [dispatch]);
 
 	// Delete a product
-	const deleteProduct = () => {
+	const deleteProduct = () => (dispatch) => {
 		axios
 			.delete(`http://localhost:5000/api/products/${deleteID}`)
 			.then((res) => {
 				const response = JSON.parse(JSON.stringify(res.data));
 				if (response.success) {
-					fetchData();
-					setModal(!modal);
+					dispatch(fetchData());
+					dispatch(closeModal());
 				}
 			});
 	};
 	//Open or Close delete confirmation dialog
-	const toggle = () => setModal(!modal);
+	const toggle = () => (dispatch) => {
+		dispatch(closeModal());
+	};
 
-	const searchClick = () => {
+	const searchClick = () => (dispatch) => {
 		axios
 			.get(`http://localhost:5000/api/products?name=${searchField}`)
 			.then((res) => {
 				const response = JSON.parse(JSON.stringify(res.data));
 				console.log(response);
-				setData(response);
+				dispatch(getSearchedPhone(response));
+				//setData(response);
 			})
 			.catch((err) => {
 				alert('Error fetching data from database>');
 			});
 	};
 
-	const filteredProducts = data.filter((product) =>
-		product.Name.toLowerCase().includes(searchField.toLowerCase())
-	);
+	// const filteredProducts = data.filter((product) =>
+	// 	product.Name.toLowerCase().includes(searchField.toLowerCase())
+	// );
 
 	return (
 		<div className='App'>
 			<div style={{ textAlign: 'right', paddingBottom: '20px' }}>
 				<SearchBox
 					placeholder='Search Products'
-					handleChange={(e) => setSearchField(e.target.value)}
-					searchClick={searchClick}
+					handleChange={(e) =>
+						dispatch(setSearchField(e.target.value))
+					}
+					searchClick={() => dispatch(searchClick())}
 				/>
 			</div>
 			<div style={{ textAlign: 'right' }}>
@@ -89,7 +101,7 @@ export const ProductList = (props) => {
 					</tr>
 				</thead>
 				<tbody>
-					{filteredProducts.map((item, index) => (
+					{data.map((item, index) => (
 						<tr key={item._id}>
 							<th scope='row'>{index + 1}</th>
 							<td>{item.Name}</td>
@@ -106,9 +118,15 @@ export const ProductList = (props) => {
 									outline
 									color='danger'
 									onClick={() => {
-										setModal(!modal);
-										setProdName(item.Name);
-										setDeleteID(item._id);
+										// setModal(!modal);
+										// setProdName(item.Name);
+										// setDeleteID(item._id);
+										dispatch(
+											deletePhoneRecordCall({
+												prodName: item.Name,
+												deleteID: item._id
+											})
+										);
 									}}
 								>
 									Delete
@@ -125,8 +143,8 @@ export const ProductList = (props) => {
 			</Table>
 			<DeleteConfirmation
 				modal={modal}
-				toggle={toggle}
-				deleteProduct={deleteProduct}
+				toggle={() => dispatch(toggle())}
+				deleteProduct={() => dispatch(deleteProduct())}
 				prodName={prodName}
 				type={'product'}
 			/>
