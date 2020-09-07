@@ -33,4 +33,4 @@ The instruction of the challenge was to refactor a poorly written product API in
 • mocha
 • supertest
 
-Furthermore, I decided to build a simple front-end with React JS and make it a complete full-stack application. I have added this application to my private git repository and I have provided the git clone URL above under the instructions sections..
+Furthermore, I decided to build a simple front-end with React JS and make it a complete full-stack application. I have added this application to my private git repository and I have provided the git clone URL above under the instructions sections.
